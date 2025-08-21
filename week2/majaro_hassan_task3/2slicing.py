@@ -1,4 +1,4 @@
-''' 2 Given the string "Python", 
+''' Given the string "Python", 
     print its first and last characters
 '''
 text = "Python"

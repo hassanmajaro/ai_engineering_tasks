@@ -1,4 +1,10 @@
-# Daily Market Report
+''' Daily Market Report
+    Market name
+    Number of traders
+    Daily revenue
+    Display the result using f-string formatting with commas for thousands
+    separator.
+'''
 
 market_name = input("Input market name: ")
 no_of_traders = int(input("Number of traders: "))

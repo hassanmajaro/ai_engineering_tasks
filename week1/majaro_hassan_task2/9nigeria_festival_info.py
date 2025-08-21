@@ -1,4 +1,9 @@
-# Nigerian Festival Info
+''' Nigerian Festival Info
+    Ask for:
+        festival name (string)
+        location (string)
+        month held (string)
+'''
 festival_name = input("Festival name: ")
 location = input("Festival location: ")
 month = input("Festival month: ")

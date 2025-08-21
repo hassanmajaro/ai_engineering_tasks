@@ -1,8 +1,9 @@
 ''' Task5: Modify Tuple Indirectly
-    Ask a user to enter three items for their shoppingn list
+    Ask a user to enter three items for their shopping list
     store in a tuple shopping_list
     convert it into a list, then ask for more items to add.
-    convert back to a tuple and print the updated list using join() to display items separated by "|"
+    convert back to a tuple and print the updated list using join() 
+    to display items separated by "|"
 '''
 print("===Task 5===")
 shop1 = input("Enter shopping item1: ")

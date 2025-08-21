@@ -1,4 +1,9 @@
-'''7. List Manipulation
+''' 7. List Manipulation
+    Create a list of five cities.
+    Replace the third city with a new one (entere by the user).
+    Remove the last city
+    add a new city to the beginning of the list
+    print the updated list
 '''
 cities = ['Lagos', 'Abeokuta', 'Ibadan', 'Ijebu', 'Lekki']
 print(cities)

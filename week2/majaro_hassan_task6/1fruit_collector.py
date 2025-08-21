@@ -1,5 +1,6 @@
 ''' Task1: Fruit Collector
-    Ask the user to enter 5 favorite fruits. Store them in a set and display the set.
+    Ask the user to enter 5 favorite fruits. 
+    Store them in a set and display the set.
 '''
 fruit1 = input("Enter favorite fruit: ")
 fruit2 = input("Enter 2nd favorite fruit: ")

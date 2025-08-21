@@ -2,7 +2,8 @@
     Write a Python program that;
     Stores the days of the week in a tuple.
     Stores the months of the year in another tuple.
-    Asks the user to enter: student's name, gender, course track, current month number(1-12), current day number(1-7) and print
+    Asks the user to enter: student's name, gender, course track, 
+    current month number(1-12), current day number(1-7) and print
 '''
 print("===Task 6===")
 days_of_the_week = ("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")

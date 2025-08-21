@@ -1,4 +1,11 @@
-# Electricity Bill Formatter
+''' Electricity Bill Formatter
+    Ask for:
+        customer's full name
+        units consumed (kWh) - integer
+        cost per unit - float
+    calculate the total bill and print it in a neatly formatted receipt
+    using escape sequences for line breaks.
+'''
 
 full_name = input("Enter full name: ")
 units_consumed = int(input("Enter units consumed(kWh): "))

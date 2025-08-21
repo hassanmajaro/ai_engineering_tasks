@@ -2,7 +2,8 @@
     Ask a user for their;
     first name, age, favorite color, home town
     store them in a tuple profile and unpack into variables
-    print and use escape sequence to align each piece of information nicely
+    print and use escape sequence to align each piece of 
+    information nicely
 '''
 print("===Task 4===")
 first_name = input("What is your first name? ")
