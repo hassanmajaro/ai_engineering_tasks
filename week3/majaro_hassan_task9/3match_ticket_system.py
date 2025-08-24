@@ -26,21 +26,3 @@ while True:
             break
     else:
         print(seat_numbers)
-        
-
-        
-        
-    
-    # print(f"\nRemaining seats are; {seat_numbers}")
-
-    # if book2 not in seat_numbers:
-    #     print(f"Seat {book} is already booked\nBook another seat")
-    #     print(f"Remaining seats are {seat_numbers}")
-    
-    # else:
-    #     seat_numbers.remove(book2)
-    #     print(f"Remaining seats are; {seat_numbers}")
-# else:
-#     seat_numbers.remove(book, book2)
-#     print("You've booked")
-# book2 = int(input("book another seat: "))

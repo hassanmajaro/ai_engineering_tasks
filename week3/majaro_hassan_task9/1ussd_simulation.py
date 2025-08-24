@@ -16,184 +16,89 @@
         number using type casting.
         7. display a final message summarizing the transaction.
 '''
-airtime_balance = 500
-number = "090"
+airtime_balance = 5000
+data_balance = 1000
+number = "09123456789"
 print("Welcome to AirtelNg Services")
 
 while True:
     ussd_code = input("Dial USSD Code: ")
+    if ussd_code == "*123#":
+        print("1. Check Balance\n2. Buy Airtime\n3. Buy Data")
 
-    if ussd_code == "*121#":
-        print("1. Buy Bundles & Services")
-        print("2. Manage my account")
-        print("3. Borrow Credit")
-        print("4. Voice Tariffs / Bundle")
-        print("5. Last recharge")
-        print("6. Cancel")
-        
-        reply = input("Reply\n")
+        option = input("Reply\n")
+        print(f"You selected option {option}\n")
 
-        if reply == "1":
-            print("1 Data Plans")
-            print("2 18GB @N5000")
-            print("3 10GB @N3000")
-            print("4 3.5GB @N750")
-      
-            choice1 = input("Reply\n")
-            if choice1 == "1":
-                print("1 Daily Plans")
-                print("2 Weekly Plans")
-                print("3 Monthly Plans")
-                print("* Exit")
+        if option == "1":
+            print("Check Balance\n1. Check Airtime Balance\n2. Check Data Balance")
 
-                choice11 = input("Reply\n")
-                if choice11 == "1":
-                    print("Daily Plan")
-                    print("1 N300/300MB")
-                    print("2 N200/230MB")
-                    print("3 N100/110MB")
-                    print("4 N75/75MB")
-                    print("* Exit")
+            bal = input("Reply\n")
 
-                    choice111 = input("Reply\n")
-                    if choice111 == "1":
-                        airtime_balance -= 300
-                        print(f"{choice111} Successfully Recharged.")
-                        break
-                    elif choice111 == "2":
-                        airtime_balance -= 200
-                        print(f"{choice111} Successfully Recharged.")
-                        break
-                    elif choice111 == "3":
-                        airtime_balance -= 100
-                        print(f"{choice111} Successfully Recharged.")
-                        break 
-                    elif choice111 == "4":
-                        print(f"{choice111} Successfully Recharged.")
-                        break 
-                    elif choice111 == "*":
-                        print("Thank you!")
-                        break 
-                    else:
-                        print("Error. Try again")
-
-                elif choice11 == "2":
-                    print("Weekly Plan")
-                    print("1 N5000/18GB")
-                    print("2 N3000/10GB")
-                    print("3 N2500/6GB")
-                    print("* Exit")
-
-                elif choice11 == "3":
-                    print("Monthly Plan")
-                    print("1 N1500/2GB")
-                    print("2 N2000/3GB")
-                    print("3 3000/8GB")
-                    print("* Exit")
-
-                elif choice11 == "*":
-                    print("Thank you!")
-                    break
-                else:
-                    print("Invalid option. Try again!")
-
-
-            elif choice1 == "2":
-                print("18GB @N5000 + 2GB YT Night+200MB YT, IG & Tiktok (7 days)")
-                print("1 Buy & Auto Renew")
-                print("2 Buy Once")
-                print("* Exit")
-
-            elif choice1 == "3":
-                print("10GB @N3000 + 700MB YT Night+200MB YT, IG & Tiktok (7 days)")
-                print("1 Buy & Auto Renew")
-                print("2 Buy Once")
-                print("* Exit")
-
-            elif choice1 == "4":
-                print("3.5GB @N750 + 200MB YT Night+200MB YT, IG & Tiktok (7 days)")
-                print("1 Buy & Auto Renew")
-                print("2 Buy Once")
-                print("* Exit")
-
-            else:
-                print("Error. Try again")
-
-        elif reply == "2":
-            print("1 My Data Balance")
-            print("2 My Airtime Balance")
-            print("3 My Data Plan")
-            print("4 Number")
-            print("* Main Menu")
-
-            choice2 = input("Reply\n")
-
-            if choice2 == "1":
-                print("Dear customer, you will receive an SMS with your Data Balance details Shortly")
-                break 
-            elif choice2 == "2":
+            if bal == "1":
                 print(f"Your account balance is {float(airtime_balance):.2f} NGN")
-                break 
-            elif choice2 == "3":
-                print("Your data plan is NA")
-                break 
-            elif choice2 == "4":
-                print(f"Your number is {number}")
-                break 
-            elif choice2 == "*":
                 break
-
-        elif reply == "3":
-            print("1 Borrow Credit (Welcome to Extra Credit)")
-            print("2 Me2U")
-            print("3 Log a complaint")
-            print("* Main Menu")
-
-            choice3 = input("Reply\n")
-            if choice3 == "1":
-                print("Dial *500# to borrow Airtime / Data")
-                break 
-            elif choice3 == "2":
-                print("Service Temporary Unavailabe")
-                break 
-            elif choice3 == "3":
-                print("Kindly visit this link https://selfcare.ng.airtel.com/LogRequest ")
-                break 
-            elif choice3 == "*":
+            elif bal == "2":
+                print(f"Your data balance is {data_balance:.2f} MB")
                 break 
             else:
-                print("Invalid option")
-                
+                print("Input valid option")
+                break
 
-        elif reply == "4":
-            print("1 smartTALK @ 25k/sec flat")
-            print("2 Buy Voice/Combo Bundle")
-            print("* Exit")
+        elif option == "2":
+            print("How much airtime do you want to purchase? ")
+            buy_airtime = int(input(""))
 
-            choice4 = input("Reply\n")
-            if choice4 == "1":
-                print("Diat *414# to view all Airtel voice plans")
-                print("1 Cancel")
-                
-                option = input("Reply\n")
-                if option == "1":
-                    break 
-                else:
+            if buy_airtime > 10000:
+                print("Sorry you can only rechage up to NGN10000 at once.\nTry again.")
+            else:
+                airtime_balance += buy_airtime
+                print(f"Your recharge of {buy_airtime} is successful.\nYour new balance is {float(airtime_balance):,.2f}")
+                break
+
+        elif option == "3":
+            print("Data Plans")
+            print("1 18GB @N5000")
+            print("2 10GB @N3000")
+            print("3 3.5GB @N750")
+
+            option2 = input("Reply\n")
+            print(f"You selected option {option2}\n")
+
+            if option2 == "1":
+                if 5000 > airtime_balance:
+                    print("Insufficient Balance.\nKindly Recharge")
                     break
-            elif choice4 == "2":
-                print("Service Temporarily Unavailabe")
-                break
+                else:
+                    airtime_balance -= 5000
+                    data_balance += 18000
+                    print(f"Your Data of 18GB @N5000 is successful")
+                    print(f"Your new balance is {float(airtime_balance):.2f} NGN and your Data Balance is {data_balance:.2f} MB")
+                    
+                    break
+            elif option2 == "2":
+                if 3000 > airtime_balance:
+                    print("Insufficient Balance.\nKindly Recharge")
+                    break
+                else:
+                    airtime_balance -= 3000
+                    data_balance += 10000
+                    print(f"Your Data of 10GB @N3000 is successful")
+                    print(f"Your new balance is {float(airtime_balance):.2f} NGN  and your Data Balance is {data_balance:.2f} MB")
+                    
+                    break
+            elif option2 == "3":
+                if 750 > airtime_balance:
+                    print("Insufficient Balance.\nKindly Recharge")
+                    break
+                else:
+                    airtime_balance -= 750
+                    data_balance += 3500
+                    print(f"Your Data of 3.5GB @N750 is successful")
+                    print(f"Your new balance is {float(airtime_balance):.2f} NGN and your Data Balance is {data_balance:.2f} MB")
+                    break
             else:
-                print("Error. Try again later")
-                break
-
-        elif reply == "5":
-            print("Airtel NG Message")
-            print("20252208 02:43:23,1000")
-            break 
-
-        elif reply == "6":
-            print("Thank you for using our service")
-            break
+                print("Ïncorrect option.\nTry again")
+        else:
+            print("Input correct option!")
     else:
-        print("Invalid MMI Code\nTry *121#")
+        print("Invalid MMI Code\nTry *123#")

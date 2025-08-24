@@ -9,7 +9,8 @@
         Other Scholarships:
             Applicants cannot be currently receiving any other scholarship from an entity in the Oil and Gas industrym whether national or international
         Academic Qualification:
-            For undergraduate courses, applicants usually need five distinctions (As and Bs) in relevant subjects in their WAEC/WASSCE (May/June) exams, including English and Mathematics.
+            For undergraduate courses, applicants usually need five distinctions (As and Bs) in relevant subjects in their WAEC/WASSCE (May/June) exams, 
+            including English and Mathematics.
 '''
 ''''
 name = input("Enter your name: ")       # This prompts the user to input their name
