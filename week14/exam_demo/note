@@ -1,0 +1,254 @@
+# ============================================
+# 🧹 DATA PREPROCESSING PIPELINE
+# ============================================
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.model_selection import train_test_split
+
+# Make a copy to avoid modifying the original data
+df_clean = df.copy()
+
+# --------------------------------------------
+# 1️⃣ HANDLE MISSING VALUES
+# --------------------------------------------
+print("Checking missing values...\n")
+print(df_clean.isnull().sum())
+
+# Separate column types
+numeric_cols = df_clean.select_dtypes(include=['int64', 'float64']).columns
+categorical_cols = df_clean.select_dtypes(include=['object']).columns
+
+# Fill numeric missing values with median
+for col in numeric_cols:
+    if df_clean[col].isnull().sum() > 0:
+        df_clean[col].fillna(df_clean[col].median(), inplace=True)
+
+# Fill categorical missing values with mode
+for col in categorical_cols:
+    if df_clean[col].isnull().sum() > 0:
+        df_clean[col].fillna(df_clean[col].mode()[0], inplace=True)
+
+print("\n✅ Missing values handled successfully.")
+
+# --------------------------------------------
+# 2️⃣ HANDLE OUTLIERS (IQR METHOD)
+# --------------------------------------------
+Q1 = df_clean[numeric_cols].quantile(0.25)
+Q3 = df_clean[numeric_cols].quantile(0.75)
+IQR = Q3 - Q1
+
+# Keep only rows within 1.5 * IQR
+df_clean = df_clean[~((df_clean[numeric_cols] < (Q1 - 1.5 * IQR)) | 
+                      (df_clean[numeric_cols] > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+print("\n✅ Outliers handled using IQR method.")
+
+# --------------------------------------------
+# 3️⃣ ENCODE CATEGORICAL VARIABLES
+# --------------------------------------------
+# Label encode binary columns and one-hot encode multi-class columns
+
+le = LabelEncoder()
+
+for col in categorical_cols:
+    if df_clean[col].nunique() == 2:
+        df_clean[col] = le.fit_transform(df_clean[col])
+    else:
+        df_clean = pd.get_dummies(df_clean, columns=[col], drop_first=True)
+
+print("\n✅ Categorical variables encoded successfully.")
+
+# --------------------------------------------
+# 4️⃣ SCALE NUMERICAL FEATURES
+# --------------------------------------------
+scaler = StandardScaler()
+df_clean[numeric_cols] = scaler.fit_transform(df_clean[numeric_cols])
+
+print("\n✅ Numerical features scaled successfully.")
+
+# --------------------------------------------
+# 5️⃣ TRAIN-TEST SPLIT
+# --------------------------------------------
+target_col = 'case_status'  # change this to your actual target column
+
+X = df_clean.drop(columns=[target_col])
+y = df_clean[target_col]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+print("\n✅ Data successfully split into training and testing sets.")
+print(f"Training shape: {X_train.shape}")
+print(f"Testing shape:  {X_test.shape}")
+
+# --------------------------------------------
+# 6️⃣ SAVE CLEANED DATA (OPTIONAL)
+# --------------------------------------------
+# df_clean.to_csv("cleaned_data.csv", index=False)
+# print("\n💾 Cleaned dataset saved to 'cleaned_data.csv'")
+
+
+
+# ============================================
+# ⚙️ BASELINE MODELING AND EVALUATION
+# ============================================
+
+# Import ML libraries
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# --------------------------------------------
+# 1️⃣ DEFINE BASELINE MODELS
+# --------------------------------------------
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
+    "Decision Tree": DecisionTreeClassifier(random_state=42),
+    "Random Forest": RandomForestClassifier(random_state=42)
+}
+
+# --------------------------------------------
+# 2️⃣ TRAIN AND EVALUATE EACH MODEL
+# --------------------------------------------
+results = {}
+
+for name, model in models.items():
+    print(f"\n🔹 Training {name}...")
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    print(f"✅ {name} Accuracy: {acc:.3f}\n")
+
+    # Save results for comparison
+    results[name] = acc
+
+    # Display detailed performance metrics
+    print("Classification Report:")
+    print(classification_report(y_test, y_pred))
+
+    # Confusion Matrix
+    cm = confusion_matrix(y_test, y_pred)
+    plt.figure(figsize=(4, 3))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="crest", cbar=False)
+    plt.title(f"{name} - Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.show()
+
+# --------------------------------------------
+# 3️⃣ COMPARE MODEL PERFORMANCE
+# --------------------------------------------
+plt.figure(figsize=(6, 4))
+sns.barplot(x=list(results.keys()), y=list(results.values()), palette="viridis")
+plt.title("📊 Baseline Model Accuracy Comparison")
+plt.ylabel("Accuracy")
+plt.ylim(0, 1)
+plt.tight_layout()
+plt.show()
+
+# --------------------------------------------
+# 4️⃣ PICK BEST MODEL
+# --------------------------------------------
+best_model_name = max(results, key=results.get)
+best_model = models[best_model_name]
+
+print(f"\n🏆 Best baseline model: {best_model_name} ({results[best_model_name]:.3f} accuracy)")
+
+
+
+# ============================================
+# 🔧 MODEL OPTIMIZATION (HYPERPARAMETER TUNING)
+# ============================================
+
+from sklearn.model_selection import GridSearchCV
+
+print(f"\n🔍 Starting GridSearchCV for {best_model_name}...")
+
+# --------------------------------------------
+# 1️⃣ DEFINE HYPERPARAMETER GRIDS
+# --------------------------------------------
+param_grids = {
+    "Logistic Regression": {
+        "C": [0.01, 0.1, 1, 10],
+        "solver": ["liblinear", "lbfgs"]
+    },
+    "Decision Tree": {
+        "max_depth": [3, 5, 10, None],
+        "min_samples_split": [2, 5, 10],
+        "criterion": ["gini", "entropy"]
+    },
+    "Random Forest": {
+        "n_estimators": [50, 100, 200],
+        "max_depth": [5, 10, None],
+        "min_samples_split": [2, 5, 10],
+        "criterion": ["gini", "entropy"]
+    }
+}
+
+# --------------------------------------------
+# 2️⃣ SELECT THE GRID FOR THE BEST MODEL
+# --------------------------------------------
+param_grid = param_grids[best_model_name]
+
+# --------------------------------------------
+# 3️⃣ INITIALIZE GRIDSEARCHCV
+# --------------------------------------------
+grid_search = GridSearchCV(
+    estimator=best_model,
+    param_grid=param_grid,
+    scoring="accuracy",
+    cv=5,
+    verbose=2,
+    n_jobs=-1
+)
+
+# --------------------------------------------
+# 4️⃣ FIT GRIDSEARCH ON TRAINING DATA
+# --------------------------------------------
+grid_search.fit(X_train, y_train)
+
+print(f"\n✅ Best parameters for {best_model_name}:")
+print(grid_search.best_params_)
+
+# --------------------------------------------
+# 5️⃣ EVALUATE THE OPTIMIZED MODEL
+# --------------------------------------------
+best_model_optimized = grid_search.best_estimator_
+y_pred_opt = best_model_optimized.predict(X_test)
+
+# Performance
+print("\n📊 Classification Report (Optimized Model):")
+print(classification_report(y_test, y_pred_opt))
+
+# Confusion Matrix
+cm_opt = confusion_matrix(y_test, y_pred_opt)
+plt.figure(figsize=(4, 3))
+sns.heatmap(cm_opt, annot=True, fmt="d", cmap="crest", cbar=False)
+plt.title(f"{best_model_name} (Optimized) - Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
+
+# --------------------------------------------
+# 6️⃣ FEATURE IMPORTANCE (for tree-based models)
+# --------------------------------------------
+if best_model_name in ["Decision Tree", "Random Forest"]:
+    importances = best_model_optimized.feature_importances_
+    feat_imp = pd.DataFrame({
+        "Feature": X_train.columns,
+        "Importance": importances
+    }).sort_values(by="Importance", ascending=False)
+
+    plt.figure(figsize=(8, 5))
+    sns.barplot(x="Importance", y="Feature", data=feat_imp, palette="viridis")
+    plt.title(f"Feature Importance ({best_model_name} Optimized)")
+    plt.tight_layout()
+    plt.show()
